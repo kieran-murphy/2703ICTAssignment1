@@ -1,0 +1,4 @@
+Entities: Vehicle, Client, Booking
+Vehicle: Rego, Model, Year, Odometer, Transmission
+Client: Drivers_License_Number, License_Type, Name, Age, Gender
+Booking: Rego, Drivers_License_Number, Start_Time, Return_Time
