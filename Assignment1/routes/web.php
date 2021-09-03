@@ -13,12 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('greetingForm');
+Route::get('/', function(){
+    $sql = "select * from vehicle";
+    $items = DB::select($sql);
+    return view('vehicle_list')->with('items', $items);
 });
 
-Route::post('greeting', function () {
-    $name = request("name");
-    $age = request("age");
-    return view('greeting')->with('name', $name)->with('age', $age+1);
-});
