@@ -29,11 +29,15 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
-        <br>
+        
         <li class="nav-item">
-          <a class="nav-link" href="add_vehicle">Create</a>
+          <a class="nav-link" href="/add_vehicle">Create</a>
         </li>
-        <br>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/client_list">Clients</a>
+        </li>
+        
         <li class="nav-item">
           <a class="nav-link" href="#">Book</a>
         </li>

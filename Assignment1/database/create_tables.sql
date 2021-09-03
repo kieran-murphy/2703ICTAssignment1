@@ -29,3 +29,8 @@ create table booking (
 insert into vehicle values ("782GTC", "Fast Car", 1999, 129020, "Manual");
 insert into vehicle values ("321WKQ", "Slow Car", 2003, 99826, "Automatic");
 insert into vehicle values ("582PPO", "Normal Car", 2012, 80223, "Automatic");
+insert into vehicle values ("311POG", "Tesla Model X", 2020, 29833, "Automatic");
+
+insert into client values (123456789, "Automatic", "John Smith", 29, "Male");
+insert into client values (999999999, "Manual", "Patricia Grey", 92, "Female");
+insert into client values (379927326, "Manual", "Greg Apples", 32, "Male");
