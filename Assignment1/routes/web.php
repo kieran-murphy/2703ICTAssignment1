@@ -19,52 +19,24 @@ Route::get('/', function(){
     return view('vehicle_list')->with('vehicles', $vehicles);
 });
 
-Route::get('add_vehicle', function(){
-    return view("add_vehicle");
-});
-
-
-
-/*
-Route::get('item_update/{id}', function($id){
-    $item = get_item($id);
-    return view('items.update_item')->with('item', $item);
-});
-
-
-
-Route::post('update_item_action', function() {
-    $id = request("id");
-    $summary = request("summary");
-    $details = request("details");
-    $updatedid = update_item($id, $summary, $details);
-    return redirect(url("item_detail/$id")); 
-});
-
-
-
-function update_item($id,$summary,$details) {
-    $sql = "update item set summary = ?, details = ? where id = ?";
-    DB::update($sql,array($summary,$details,$id));
-}
-
-
-*/
-
 Route::get('vehicle_detail/{rego}', function($rego){
     $vehicle = get_vehicle($rego);
     return view('vehicle_detail')->with('vehicle', $vehicle);
 });
 
-function get_vehicle($id) {
+function get_vehicle($rego) {
     $sql = "select * from vehicle where rego=?";
-    $vehicles = DB::select($sql, array($id));
+    $vehicles = DB::select($sql, array($rego));
     if (count($vehicles) != 1){
         die("Something has gone wrong, invalid query or result: $sql");
     }
     $vehicle = $vehicles[0];
     return $vehicle;
 }
+
+Route::get('add_vehicle', function(){
+    return view("add_vehicle");
+});
 
 function add_vehicle($rego, $model, $year, $odometer, $transmission){
     $sql = "insert into vehicle (rego, model, year, odometer, transmission) values (?, ?, ?, ?, ?)";
@@ -86,6 +58,38 @@ Route::post('add_vehicle_action', function() {
         die("Error while adding vehicle.");
     }
 });
+
+
+
+
+
+
+Route::get('vehicle_update/{rego}', function($rego){
+    $vehicle = get_vehicle($rego);
+    return view('update_vehicle')->with('vehicle', $vehicle);
+});
+
+Route::post('update_vehicle_action', function() {
+    $rego = request("rego");
+    $model = request("model");
+    $year = request("year");
+    $odometer = request("odometer");
+    $transmission = request("transmission");
+    $updatedvehicle = update_vehicle($rego, $model, $year, $odometer, $transmission);
+    return redirect(url("vehicle_detail/$rego")); 
+});
+
+function update_vehicle($rego, $model, $year, $odometer, $transmission) {
+    $sql = "update vehicle set model = ?, year = ?, odometer = ?, transmission = ? where rego = ?";
+    DB::update($sql,array($model, $year, $odometer, $transmission, $rego));
+}
+
+
+
+
+
+
+
 
 Route::post('delete_vehicle_action', function() {
     $rego = request("rego");

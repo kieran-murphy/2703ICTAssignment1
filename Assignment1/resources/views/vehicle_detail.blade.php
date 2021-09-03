@@ -5,9 +5,9 @@
 @endsection
 
 @section('content')
-    <h1>{{$vehicle->model}}</h1>
+    <h1>{{$vehicle->rego}}</h1>
     <br>
-    <p>Rego: {{$vehicle->rego}}</p>
+    <p>Model: {{$vehicle->model}}</p>
     <p>Year: {{$vehicle->year}}</p>
     <p>Odometer: {{$vehicle->odometer}} kms</p>
     <p>Transmission: {{$vehicle->transmission}}</p>
