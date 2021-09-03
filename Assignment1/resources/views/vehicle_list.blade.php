@@ -6,16 +6,16 @@
 
 @section('content')
 <h1>Vehicles</h1>
-    @if ($items)
+    @if ($vehicles)
         <ul>
-        @foreach($items as $item)
-            <li><a href="{{url("item_detail/$item->model")}}">{{$item->rego}}</a></li>
+        @foreach($vehicles as $vehicle)
+            <li><a href="{{url("vehicle_detail/$vehicle->rego")}}">{{$vehicle->rego}}</a></li>
         @endforeach
         </ul>
         <br>
-        <a href="{{url("add_item")}}">Add New Item</a>
+        <a href="{{url("add_vehicle")}}">Add New Vehicle</a>
     @else 
-        No item found
+        No vehicles found
     @endif
 @endsection
     

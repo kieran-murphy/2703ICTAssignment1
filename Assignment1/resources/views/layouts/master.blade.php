@@ -12,7 +12,7 @@
 
 <nav class="navbar navbar-expand-lg navbar navbar-success bg-success">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Fleet</a>
+    <a class="navbar-brand" href="/">Fleet</a>
     <button
       class="navbar-toggler"
       type="button"
@@ -27,13 +27,15 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
+        <br>
         <li class="nav-item">
-          <a class="nav-link" href="#">Create</a>
+          <a class="nav-link" href="add_vehicle">Create</a>
         </li>
+        <br>
         <li class="nav-item">
-          <a class="nav-link" href="#">Details</a>
+          <a class="nav-link" href="#">Book</a>
         </li>
       </ul>
     </div>
