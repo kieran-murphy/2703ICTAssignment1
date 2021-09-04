@@ -8,6 +8,7 @@
 <h1>Update Item</h1>
     <form method="post" action="{{url("update_vehicle_action")}}">
     {{csrf_field()}}
+    <br>
     <input type="hidden" name="rego" value="{{$vehicle->rego}}">
     <div class="form-group">
         <label for="exampleFormControlInput1">Model</label>

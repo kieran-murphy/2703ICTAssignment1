@@ -1,13 +1,14 @@
 @extends('layouts.master')
 
 @section('title')
-    Add Item
+    Add Vehicle
 @endsection
 
 @section('content')
-    <h1>Add Item</h1>
+    <h1>Add Vehicle</h1>
     <form method="post" action="{{url("add_vehicle_action")}}">
     {{csrf_field()}}
+    <br>
     <div class="form-group">
         <label for="exampleFormControlInput1">Rego</label>
         <input type="text" class="form-control" id="exampleFormControlInput1" name="rego" placeholder="Rego">

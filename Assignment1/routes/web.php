@@ -23,7 +23,8 @@ Route::get('/', function(){
 
 Route::get('vehicle_detail/{rego}', function($rego){
     $vehicle = get_vehicle($rego);
-    return view('vehicle_detail')->with('vehicle', $vehicle);
+    $bookings = get_vehicle_bookings($rego);
+    return view('vehicle_detail')->with('vehicle', $vehicle)->with('bookings', $bookings);
 });
 
 function get_vehicle($rego) {
@@ -34,6 +35,17 @@ function get_vehicle($rego) {
     }
     $vehicle = $vehicles[0];
     return $vehicle;
+}
+
+function get_vehicle_bookings($rego) {
+    $sql = "select * from vehicle, booking where rego=? and vehicle.rego = booking.vehicle_rego";
+    $bookings = DB::select($sql, array($rego));
+    if (count($bookings) != 0){
+        return $bookings;
+    } else {
+        return null;
+    }
+    
 }
 
 //Client List
@@ -78,7 +90,11 @@ Route::post('add_client_action', function() {
     $name = request("name");
     $age = request("age");
     $gender = request("gender");
-    $id = add_client($drivers_license_number, $license_type, $name, $age, $gender);
+    if ($age <= 99 && $age >= 17) {
+        $id = add_client($drivers_license_number, $license_type, $name, $age, $gender);
+    } else {
+        die("Error: Age must be between 17 and 99");
+    }
     if ($id) {
         return redirect(url("client_detail/$drivers_license_number"));
     } else {
@@ -99,7 +115,11 @@ Route::post('update_client_action', function() {
     $name = request("name");
     $age = request("age");
     $gender = request("gender");
-    $updatedclient = update_client($drivers_license_number, $license_type, $name, $age, $gender);
+    if ($age <= 99 && $age >= 17) {
+        $updatedclient = update_client($drivers_license_number, $license_type, $name, $age, $gender);
+    } else {
+        die("Error: Age must be between 17 and 99");
+    }
     return redirect(url("client_detail/$drivers_license_number")); 
 });
 
@@ -145,7 +165,12 @@ Route::post('add_vehicle_action', function() {
     $year = request("year");
     $odometer = request("odometer");
     $transmission = request("transmission");
-    $id = add_vehicle($rego, $model, $year, $odometer, $transmission);
+    if (strlen($rego) == 6) {
+        $id = add_vehicle($rego, $model, $year, $odometer, $transmission);
+    } else {
+        die("Error: Rego must have a length of 6.");
+    }
+    
     if ($id) {
         return redirect(url("vehicle_detail/$rego"));
     } else {
@@ -191,4 +216,97 @@ Route::get('vehicle_delete/{rego}', function($rego){
 function delete_vehicle($rego){
     $sql = "delete from vehicle where rego = ?";
     DB::delete($sql,array($rego));
+}
+
+//Add Booking
+
+Route::get('add_booking', function(){
+    //probably check availability here
+    $sql_vehicles = "select * from vehicle";
+    $vehicles = DB::select($sql_vehicles);
+    $sql_clients = "select * from client";
+    $clients = DB::select($sql_clients);
+    return view("booking.add_booking")->with('vehicles', $vehicles)->with('clients', $clients);
+});
+
+function add_booking($vehicle_rego, $client_drivers_license_number, $start_time, $return_time){
+    $sql = "insert into booking (vehicle_rego, client_drivers_license_number, start_time, return_time) values (?, ?, ?, ?)";
+    DB::insert($sql, array($vehicle_rego, $client_drivers_license_number, $start_time, $return_time));
+    $id = DB::getPdo()->lastInsertId();
+    return($id);
+}
+
+Route::post('add_booking_action', function() {
+    $vehicle_rego = request("vehicle_rego");
+    $client_drivers_license_number = request("client_drivers_license_number");
+    $start_time = request("start_time");
+    $return_time = request("return_time");
+    $id = add_booking($vehicle_rego, $client_drivers_license_number, $start_time, $return_time);
+    if ($id) {
+        return redirect(url("booking_list"));
+    } else {
+        die("Error while adding booking.");
+    }
+});
+
+//Booking List
+
+Route::get('/booking_list', function(){
+    $sql = "select * from booking";
+    $bookings = DB::select($sql);
+    return view('booking.booking_list')->with('bookings', $bookings);
+});
+
+Route::get('booking_detail/{booking_id}', function($booking_id){
+    $booking = get_booking($booking_id);
+    return view('booking.booking_detail')->with('booking', $booking);
+});
+
+function get_booking($booking_id) {
+    $sql = "select * from booking where booking_id=?";
+    $bookings = DB::select($sql, array($booking_id));
+    if (count($bookings) != 1){
+        die("Something has gone wrong, invalid query or result: $sql");
+    }
+    $booking = $bookings[0];
+    return $booking;
+}
+
+//Delete Booking
+
+Route::get('booking_delete/{booking_id}', function($booking_id){
+    $booking = get_booking($booking_id);
+    $vehicle = get_vehicle_from_booking($booking_id);
+    return view('booking.delete_booking')->with('booking', $booking)->with('vehicle', $vehicle);
+});
+
+Route::post('delete_booking_action', function() {
+    $odometer = request("odometer");
+    $vehicle_rego = request("vehicle_rego");
+    $booking_id = request("booking_id");
+    $added_kms = request("added_kms");
+    $final_kms = $odometer + $added_kms;
+    add_kms($vehicle_rego, $final_kms);
+    delete_booking($booking_id);
+    return redirect(url("booking_list"));
+});
+
+function delete_booking($booking_id){
+    $sql = "delete from booking where booking_id = ?";
+    DB::delete($sql,array($booking_id));
+}
+
+function add_kms($vehicle_rego, $final_kms){
+    $sql = "update vehicle set odometer = ? where rego = ?";
+    DB::update($sql,array($final_kms, $vehicle_rego));
+}
+
+function get_vehicle_from_booking($booking_id) {
+    $sql = "select * from vehicle, booking where booking.booking_id=? and vehicle.rego = booking.vehicle_rego";
+    $vehicles = DB::select($sql, array($booking_id));
+    if (count($vehicles) != 1){
+        die("Something has gone wrong, invalid query or result: $sql");
+    }
+    $vehicle = $vehicles[0];
+    return $vehicle;
 }

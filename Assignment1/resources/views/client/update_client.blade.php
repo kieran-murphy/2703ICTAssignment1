@@ -8,6 +8,7 @@
 <h1>Update Client</h1>
     <form method="post" action="{{url("update_client_action")}}">
     {{csrf_field()}}
+    <br>
     <input type="hidden" name="drivers_license_number" value="{{$client->drivers_license_number}}">
     <div class="form-group">
         <label for="exampleFormControlInput1">Name</label>

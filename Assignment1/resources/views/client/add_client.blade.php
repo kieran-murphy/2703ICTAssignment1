@@ -8,6 +8,7 @@
     <h1>Add Client</h1>
     <form method="post" action="{{url("add_client_action")}}">
     {{csrf_field()}}
+    <br>
     <div class="form-group">
         <label for="exampleFormControlInput1">Name</label>
         <input type="text" class="form-control" id="exampleFormControlInput1" name="name" placeholder="Name">
