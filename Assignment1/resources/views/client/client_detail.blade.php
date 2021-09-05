@@ -5,12 +5,39 @@
 @endsection
 
 @section('content')
-    <h1>{{$client->name}}</h1>
+    @if ($client->gender == 'Male')
+        <h1>{{$client->name}} 👨</h1>
+    @elseif ($client->gender == 'Female')
+        <h1>{{$client->name}} 👩</h1>
+    @elseif ($client->gender == 'Other')
+        <h1>{{$client->name}} 🧑</h1>
+    @endif
     <br>
-    <p>License Number: {{$client->drivers_license_number}}</p>
-    <p>Type: {{$client->license_type}}</p>
-    <p>Age: {{$client->age}}</p>
-    <p>Gender: {{$client->gender}}</p>
+    <div class="tablediv">
+    <table class="table table-striped table-hover table-bordered">
+    <tbody>
+        <tr>
+        <th>License Number</th>
+        <td>{{$client->drivers_license_number}}</td>
+        
+        </tr>
+        <tr>
+        <th>Type</th>
+        <td>{{$client->license_type}}</td>
+        
+        </tr>
+        <tr>
+        <th>Age</th>
+        <td>{{$client->age}}</td>
+        
+        </tr>
+        <tr>
+        <th>Gender</th>
+        <td>{{$client->gender}}</td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
     <br>
     <a href="{{url("client_update/$client->drivers_license_number")}}">Update client</a>
     <br>

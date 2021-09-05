@@ -5,7 +5,13 @@
 @endsection
 @section('content')
 
-<h1>Update Client</h1>
+@if ($client->gender == 'Male')
+        <h1>Update {{$client->name}} 👨</h1>
+    @elseif ($client->gender == 'Female')
+        <h1>Update {{$client->name}} 👩</h1>
+    @elseif ($client->gender == 'Other')
+        <h1>Update {{$client->name}} 🧑</h1>
+    @endif
     <form method="post" action="{{url("update_client_action")}}">
     {{csrf_field()}}
     <br>

@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <h1>Add Booking</h1>
+    <h1>Add Booking 📆</h1>
     <form method="post" action="{{url("add_booking_action")}}">
     {{csrf_field()}}
     <br>

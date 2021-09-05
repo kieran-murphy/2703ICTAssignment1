@@ -5,17 +5,19 @@
 @endsection
 
 @section('content')
-<h1>Vehicles</h1>
+<h1>Vehicles 🚗 - Days</h1>
 <br>
 Sort by: <a href="{{url("days_vehicle_list")}}">Days</a> or <a href="{{url("bookings_vehicle_list")}}">Bookings</a> or <a href="{{url("/")}}">ID</a>
 <br>
 <br>
     @if ($vehicles)
-        <ul>
+    <div class="tablediv">
+        <div class="list-group">
         @foreach($vehicles as $vehicle)
-            <li><a href="{{url("vehicle_detail/$vehicle->rego")}}">{{$vehicle->rego}}</a></li>
+            <a href="{{url("vehicle_detail/$vehicle->rego")}}" class="list-group-item list-group-item-action">{{$vehicle->rego}}</a>
         @endforeach
-        </ul>
+        </div>
+        </div>
         <br>
         <a href="{{url("add_vehicle")}}">Add New Vehicle</a>
     @else 

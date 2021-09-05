@@ -5,24 +5,84 @@
 @endsection
 
 @section('content')
-    <h1>Vehicle Details</h1>
+    <h1>Vehicle Details 🚗</h1>
     <br>
-    <p>Rego: {{$vehicle->rego}}</p>
-    <p>Model: {{$vehicle->model}}</p>
-    <p>Year: {{$vehicle->year}}</p>
-    <p>Odometer: {{$vehicle->odometer}} kms</p>
-    <p>Transmission: {{$vehicle->transmission}}</p>
-    <p>Total Times Booked: {{$vehicle->bookings}}</p>
-    <p>Total Days Booked: {{$vehicle->booking_time}}</p>
+    <div class="tablediv">
+    <table class="table table-striped table-hover table-bordered">
+    <tbody>
+        <tr>
+        <th>Rego</th>
+        <td>{{$vehicle->rego}}</td>
+        
+        </tr>
+        <tr>
+        <th>Model</th>
+        <td>{{$vehicle->model}}</td>
+        
+        </tr>
+        <tr>
+        <th>Year</th>
+        <td>{{$vehicle->year}}</td>
+        
+        </tr>
+        <tr>
+        <th>Odometer</th>
+        <td>{{$vehicle->odometer}} kms</td>
+        </tr>
+
+        <tr>
+        <th>Transmission</th>
+        <td>{{$vehicle->transmission}}</td>
+        </tr>
+
+        <tr>
+        <th>Total Times Booked</th>
+        <td>{{$vehicle->bookings}}</td>
+        </tr>
+
+        <tr>
+        <th>Total Days Booked</th>
+        <td>{{$vehicle->booking_time}}</td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
     <br>
-    <h1>Current Booking:</h1>
+
+
+
+
+
+    <h1>Current Booking 📆</h1>
     <br>
     @if ($bookings)
         
         @foreach($bookings as $booking)
-            <a href="{{url("booking_detail/$booking->booking_id")}}">{{$booking->client_drivers_license_number}}</a> from: {{$booking->start_time}} until: {{$booking->return_time}}
-            <br>
-            <br>
+
+            <div class="tablediv">
+            <table class="table table-striped table-hover table-bordered">
+            <tbody>
+                
+                <tr>
+                <th>Drivers Licence</th>
+                <td>{{$booking->client_drivers_license_number}}</td>
+                
+                </tr>
+                <tr>
+                <th>Start Date</th>
+                <td>{{$booking->start_time}}</td>
+                
+                </tr>
+                <tr>
+                <th>Return Date</th>
+                <td>{{$booking->return_time}}</td>
+                </tr>
+
+            </tbody>
+            </table>
+            </div>
+
+            
         @endforeach
         
         

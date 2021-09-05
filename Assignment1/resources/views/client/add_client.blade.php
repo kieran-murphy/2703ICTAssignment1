@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <h1>Add Client</h1>
+    <h1>Add Client 🧑</h1>
     <form method="post" action="{{url("add_client_action")}}">
     {{csrf_field()}}
     <br>

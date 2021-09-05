@@ -43,6 +43,16 @@
   box-sizing: border-box;
 }
 
+th {
+  font-size: 1.1rem;
+  font-weight: bold;
+  width: 40%;
+}
+
+.tablediv {
+  width: 50%;
+}
+
 html {
   font-family: sans-serif;
   line-height: 1.15;

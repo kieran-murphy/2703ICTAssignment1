@@ -1,9 +1,12 @@
 @extends('layouts.master')
 
 @section('title')
-    Delete Booking
+    Return Vehicle 
 @endsection
 @section('content')
+
+<h1>Return Vehicle 🚗🔁</h1>
+<br>
 
 <form method="post" action="{{url("delete_booking_action")}}">
     {{csrf_field()}}

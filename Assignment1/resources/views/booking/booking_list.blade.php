@@ -5,13 +5,16 @@
 @endsection
 
 @section('content')
-<h1>Bookings</h1>
+<h1>Bookings 📆</h1>
     @if ($bookings)
-        <ul>
+        <br>
+        <div class="tablediv">
+        <div class="list-group">
         @foreach($bookings as $booking)
-            <li><a href="{{url("booking_detail/$booking->booking_id")}}">{{$booking->vehicle_rego}}</a></li>
+            <a href="{{url("booking_detail/$booking->booking_id")}}" class="list-group-item list-group-item-action">{{$booking->vehicle_rego}}</a>
         @endforeach
-        </ul>
+        </div>
+        </div>
         <br>
         
     @else 

@@ -253,8 +253,7 @@ function delete_vehicle($rego){
 //Add Booking
 
 Route::get('add_booking', function(){
-    //probably check availability here
-    $sql_vehicles = "select * from vehicle";
+    $sql_vehicles = "select * from vehicle where is_booked = 0";
     $vehicles = DB::select($sql_vehicles);
     $sql_clients = "select * from client";
     $clients = DB::select($sql_clients);
@@ -264,6 +263,8 @@ Route::get('add_booking', function(){
 function add_booking($vehicle_rego, $client_drivers_license_number, $start_time, $return_time){
     $sql = "insert into booking (vehicle_rego, client_drivers_license_number, start_time, return_time) values (?, ?, ?, ?)";
     DB::insert($sql, array($vehicle_rego, $client_drivers_license_number, $start_time, $return_time));
+    $sql = "update vehicle set is_booked = ? where rego = ?";
+    DB::update($sql,array(1, $vehicle_rego));
     $id = DB::getPdo()->lastInsertId();
     return($id);
 }
@@ -273,7 +274,21 @@ Route::post('add_booking_action', function() {
     $client_drivers_license_number = request("client_drivers_license_number");
     $start_time = request("start_time");
     $return_time = request("return_time");
-    $id = add_booking($vehicle_rego, $client_drivers_license_number, $start_time, $return_time);
+    
+    
+    if (strtotime($start_time) < strtotime($return_time)) {
+        $id = add_booking($vehicle_rego, $client_drivers_license_number, $start_time, $return_time);
+        if ($id) {
+            return redirect(url("booking_list"));
+        } else {
+            die("Error while adding client.");
+        }
+    } else {
+        die("Error: Start date must come before return date");
+    }
+    
+    
+    
     if ($id) {
         return redirect(url("booking_list"));
     } else {
@@ -320,7 +335,17 @@ Route::post('delete_booking_action', function() {
     $odometer = request("odometer");
     $vehicle_rego = request("vehicle_rego");
     $booking_id = request("booking_id");
-    $added_kms = request("added_kms");
+
+
+    
+    if (request("added_kms") >= 0) {
+        $added_kms = request("added_kms");
+    } else {
+        die("Kilometers cannot be a negative number");
+    }
+
+
+
     $bookings = request("bookings");
     $start_time = request("start_time");
     $return_time = request("return_time");
@@ -333,8 +358,10 @@ Route::post('delete_booking_action', function() {
     $final_bookings = $bookings + 1;
     $final_kms = $odometer + $added_kms;
 
+    
     add_kms($vehicle_rego, $final_kms, $final_bookings, $final_days);
     delete_booking($booking_id);
+    make_available($vehicle_rego);
     return redirect(url("booking_list"));
 });
 
@@ -346,6 +373,12 @@ function delete_booking($booking_id){
 function add_kms($vehicle_rego, $final_kms, $final_bookings, $final_days){
     $sql = "update vehicle set odometer = ?, bookings = ?, booking_time = ? where rego = ?";
     DB::update($sql,array($final_kms, $final_bookings, $final_days, $vehicle_rego));
+    
+}
+
+function make_available($vehicle_rego){
+    $sql = "update vehicle set is_booked = ? where rego = ?";
+    DB::update($sql,array(0, $vehicle_rego));
 }
 
 function get_vehicle_from_booking($booking_id) {

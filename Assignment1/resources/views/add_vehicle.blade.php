@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <h1>Add Vehicle</h1>
+    <h1>Add Vehicle 🚗</h1>
     <form method="post" action="{{url("add_vehicle_action")}}">
     {{csrf_field()}}
     <br>
