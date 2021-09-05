@@ -15,7 +15,11 @@
         <br>
         
     @else 
+        <br>
         No bookings found
+        <br>
+        <br>
+        
     @endif
     <a href="{{url("add_booking")}}">Add New Booking</a>
 @endsection

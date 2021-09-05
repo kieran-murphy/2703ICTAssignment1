@@ -24,7 +24,7 @@
         <label for="exampleFormControlSelect1">Select Client</label>
         <select class="form-control" id="exampleFormControlSelect1" name="client_drivers_license_number">
         @foreach($clients as $client)
-            <option>{{$client->drivers_license_number}}</option>
+            <option value = "{{$client->drivers_license_number}}"> {{$client->name}} ({{$client->drivers_license_number}}) </option>
         @endforeach
         </select>
     </div>
@@ -33,7 +33,7 @@
         <label for="exampleFormControlSelect1">Select Vehicle</label>
         <select class="form-control" id="exampleFormControlSelect1" name="vehicle_rego">
         @foreach($vehicles as $vehicle)
-            <option>{{$vehicle->rego}}</option>
+            <option value = "{{$vehicle->rego}}">{{$vehicle->model}} ({{$vehicle->rego}})</option>
         @endforeach
         </select>
     </div>

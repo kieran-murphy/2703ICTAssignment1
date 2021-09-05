@@ -12,8 +12,10 @@
     <p>Year: {{$vehicle->year}}</p>
     <p>Odometer: {{$vehicle->odometer}} kms</p>
     <p>Transmission: {{$vehicle->transmission}}</p>
+    <p>Total Times Booked: {{$vehicle->bookings}}</p>
+    <p>Total Days Booked: {{$vehicle->booking_time}}</p>
     <br>
-    <h1>Bookings:</h1>
+    <h1>Current Booking:</h1>
     <br>
     @if ($bookings)
         
@@ -26,6 +28,9 @@
         
     @else 
         No bookings found
+        <br>
+        <br>
+        <a href="{{url("add_booking")}}"> Book this vehicle?</a>
     @endif
     <br>
     <br>

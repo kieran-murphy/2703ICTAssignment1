@@ -48,6 +48,38 @@ function get_vehicle_bookings($rego) {
     
 }
 
+//Sort by Days Vehicle List
+
+Route::get('/days_vehicle_list', function(){
+    $sql = "select * from vehicle";
+    $vehicles = DB::select($sql);
+    $vehicles = days_sort($vehicles);
+    return view('days_vehicle_list')->with('vehicles', $vehicles);
+});
+
+function days_sort($vehicles) {
+    $vehicles = collect($vehicles);
+    $vehicles = $vehicles->sortByDesc('booking_time');
+    $vehicles = $vehicles->toArray();
+    return $vehicles;
+}
+
+//Sort by Bookings Vehicle List
+
+Route::get('/bookings_vehicle_list', function(){
+    $sql = "select * from vehicle";
+    $vehicles = DB::select($sql);
+    $vehicles = bookings_sort($vehicles);
+    return view('bookings_vehicle_list')->with('vehicles', $vehicles);
+});
+
+function bookings_sort($vehicles) {
+    $vehicles = collect($vehicles);
+    $vehicles = $vehicles->sortByDesc('bookings');
+    $vehicles = $vehicles->toArray();
+    return $vehicles;
+}
+
 //Client List
 
 Route::get('/client_list', function(){
@@ -277,7 +309,11 @@ function get_booking($booking_id) {
 Route::get('booking_delete/{booking_id}', function($booking_id){
     $booking = get_booking($booking_id);
     $vehicle = get_vehicle_from_booking($booking_id);
-    return view('booking.delete_booking')->with('booking', $booking)->with('vehicle', $vehicle);
+    
+    $datediff = strtotime($booking->return_time) - strtotime($booking->start_time);
+
+    $final = intval(round($datediff / (60 * 60 * 24)));
+    return view('booking.delete_booking')->with('booking', $booking)->with('vehicle', $vehicle)->with('final', $final);
 });
 
 Route::post('delete_booking_action', function() {
@@ -285,8 +321,19 @@ Route::post('delete_booking_action', function() {
     $vehicle_rego = request("vehicle_rego");
     $booking_id = request("booking_id");
     $added_kms = request("added_kms");
+    $bookings = request("bookings");
+    $start_time = request("start_time");
+    $return_time = request("return_time");
+    $booking_time = request("booking_time");
+
+    $datediff = strtotime($return_time) - strtotime($start_time);
+    $days = intval(round($datediff / (60 * 60 * 24)));
+    $final_days = $days + $booking_time;
+
+    $final_bookings = $bookings + 1;
     $final_kms = $odometer + $added_kms;
-    add_kms($vehicle_rego, $final_kms);
+
+    add_kms($vehicle_rego, $final_kms, $final_bookings, $final_days);
     delete_booking($booking_id);
     return redirect(url("booking_list"));
 });
@@ -296,9 +343,9 @@ function delete_booking($booking_id){
     DB::delete($sql,array($booking_id));
 }
 
-function add_kms($vehicle_rego, $final_kms){
-    $sql = "update vehicle set odometer = ? where rego = ?";
-    DB::update($sql,array($final_kms, $vehicle_rego));
+function add_kms($vehicle_rego, $final_kms, $final_bookings, $final_days){
+    $sql = "update vehicle set odometer = ?, bookings = ?, booking_time = ? where rego = ?";
+    DB::update($sql,array($final_kms, $final_bookings, $final_days, $vehicle_rego));
 }
 
 function get_vehicle_from_booking($booking_id) {
@@ -310,3 +357,4 @@ function get_vehicle_from_booking($booking_id) {
     $vehicle = $vehicles[0];
     return $vehicle;
 }
+
