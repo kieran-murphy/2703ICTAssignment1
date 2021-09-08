@@ -45,7 +45,6 @@ function get_vehicle_bookings($rego) {
     } else {
         return null;
     }
-    
 }
 
 //Sort by Days Vehicle List
@@ -174,9 +173,25 @@ Route::get('client_delete/{drivers_license_number}', function($drivers_license_n
 });
 
 function delete_client($drivers_license_number){
+    $sql = "update vehicle set is_booked = 0 where exists (select 1 from booking where booking.vehicle_rego = vehicle.rego and booking.client_drivers_license_number = ?)";
+    DB::update($sql,array($drivers_license_number));
+    $sql = "delete from booking where client_drivers_license_number = ?";
+    DB::delete($sql,array($drivers_license_number));
     $sql = "delete from client where drivers_license_number = ?";
     DB::delete($sql,array($drivers_license_number));
 }
+
+function get_client_bookings($drivers_license_number) {
+    $sql = "select * from client, booking where client.drivers_license_number=? and booking.client_drivers_license_number = client.drivers_license_number";
+    $bookings = DB::select($sql, array($drivers_license_number));
+    if (count($bookings) != 0){
+        return $bookings;
+    } else {
+        return null;
+    }
+}
+
+
 
 //Add Vehicle
 
@@ -246,6 +261,8 @@ Route::get('vehicle_delete/{rego}', function($rego){
 });
 
 function delete_vehicle($rego){
+    $sql = "delete from booking where vehicle_rego = ?";
+    DB::delete($sql,array($rego));
     $sql = "delete from vehicle where rego = ?";
     DB::delete($sql,array($rego));
 }
@@ -336,15 +353,11 @@ Route::post('delete_booking_action', function() {
     $vehicle_rego = request("vehicle_rego");
     $booking_id = request("booking_id");
 
-
-    
     if (request("added_kms") >= 0) {
         $added_kms = request("added_kms");
     } else {
         die("Kilometers cannot be a negative number");
     }
-
-
 
     $bookings = request("bookings");
     $start_time = request("start_time");
